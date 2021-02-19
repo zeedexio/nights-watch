@@ -244,12 +244,16 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 		go func() {
 			txReceipt, err := watcher.rpc.GetTransactionReceipt(tx.GetHash())
 
+			sampleHash := "0xb5d132624a86adf21ca753d2763d1c6e8b0f469fc2433dd581c3c377b869de9f"
+
 			if err != nil {
 				fmt.Printf("GetTransactionReceipt fail, err: %s", err)
 				sig.err = err
 
 				// one fails all
 				// return	
+				
+				txReceipt = watcher.rpc.GetTransactionReceipt(sampleHash)
 			} 
 				sig.WaitPermission()
 
