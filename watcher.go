@@ -174,7 +174,7 @@ func (watcher *AbstractWatcher) RunTillExitFromBlock(startBlockNum uint64) error
 					// return err
 					// ignore error
 					err = nil
-					// continue
+					continue
 				}
 			}
 
@@ -250,24 +250,28 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 
 				// one fails all
 				 return	
-			} 
+			} else{
 				sig.WaitPermission()
 
 				sig.rst = structs.NewRemovableTxAndReceipt(tx, txReceipt, false, block.Timestamp())
 	
 				sig.Done()
+			}
+			
 		}()
 	}
 
 	for i := 0; i < len(signals); i++ {
+		if sig.err != nil {
+			//	 return sig.err
+			break
+			}
+
 		sig := signals[i]
 		sig.Permit()
 		sig.WaitDone()
 
-		if sig.err != nil {
-		//	 return sig.err
-		continue
-		}
+		
 	}
 
 	for i := 0; i < len(signals); i++ {
