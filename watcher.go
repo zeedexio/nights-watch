@@ -172,7 +172,9 @@ func (watcher *AbstractWatcher) RunTillExitFromBlock(startBlockNum uint64) error
 
 				if err != nil {
 					// return err
-					continue
+					// ignore error
+					err = nil
+					// continue
 				}
 			}
 
