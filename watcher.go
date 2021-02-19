@@ -174,6 +174,8 @@ func (watcher *AbstractWatcher) RunTillExitFromBlock(startBlockNum uint64) error
 					// return err
 					// ignore error
 					err = nil
+					newBlockNumToSync = watcher.LatestSyncedBlockNum() + 1
+					fmt.Println("next will be:", watcher.LatestSyncedBlockNum() + 1)
 					fmt.Println("got err")
 					// continue
 				}
@@ -199,7 +201,7 @@ func (watcher *AbstractWatcher) LatestSyncedBlockNum() uint64 {
 	}
 
 	b := watcher.SyncedBlocks.Back().Value.(sdk.Block)
-	fmt.Printf("Next Block for Sync, b: %s", b)
+	fmt.Println("Next Block for Sync, b:", b.Number())
 
 	return b.Number()
 }
