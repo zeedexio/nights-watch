@@ -174,6 +174,7 @@ func (watcher *AbstractWatcher) RunTillExitFromBlock(startBlockNum uint64) error
 					// return err
 					// ignore error
 					err = nil
+					fmt.Println("got err")
 					// continue
 				}
 			}
@@ -198,6 +199,7 @@ func (watcher *AbstractWatcher) LatestSyncedBlockNum() uint64 {
 	}
 
 	b := watcher.SyncedBlocks.Back().Value.(sdk.Block)
+	fmt.Printf("Next Block for Sync, b: %s", b)
 
 	return b.Number()
 }
@@ -271,7 +273,8 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 
 			watcher.SyncedBlocks.PushBack(block.Block)
 			watcher.NewBlockChan <- block
-			return sig.err
+			fmt.Println("returning nil")
+			return nil
 		}
 	}
 
@@ -300,6 +303,7 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 	// block
 	watcher.SyncedBlocks.PushBack(block.Block)
 	watcher.NewBlockChan <- block
+	fmt.Println("Block Done !")
 
 	return nil
 }
