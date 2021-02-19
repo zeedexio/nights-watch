@@ -174,7 +174,7 @@ func (watcher *AbstractWatcher) RunTillExitFromBlock(startBlockNum uint64) error
 					// return err
 					// ignore error
 					err = nil
-					continue
+					// continue
 				}
 			}
 
@@ -268,7 +268,7 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 		sig.WaitDone()
 
 		if sig.err != nil {
-			
+
 			watcher.SyncedBlocks.PushBack(block.Block)
 			watcher.NewBlockChan <- block
 			return sig.err
