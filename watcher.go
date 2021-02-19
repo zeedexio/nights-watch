@@ -170,9 +170,10 @@ func (watcher *AbstractWatcher) RunTillExitFromBlock(startBlockNum uint64) error
 					err = watcher.addNewBlock(structs.NewRemovableBlock(newBlock, false))
 				}
 
-				// if err != nil {
-				// 	return err
-				// }
+				if err != nil {
+					// return err
+					continue
+				}
 			}
 
 			if noNewBlockForSync {
@@ -261,9 +262,9 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 		sig.Permit()
 		sig.WaitDone()
 
-		// if sig.err != nil {
-		// 	 return sig.err
-		// }
+		if sig.err != nil {
+			 return sig.err
+		}
 	}
 
 	for i := 0; i < len(signals); i++ {
