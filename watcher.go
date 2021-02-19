@@ -170,9 +170,9 @@ func (watcher *AbstractWatcher) RunTillExitFromBlock(startBlockNum uint64) error
 					err = watcher.addNewBlock(structs.NewRemovableBlock(newBlock, false))
 				}
 
-				if err != nil {
-					return err
-				}
+				// if err != nil {
+				// 	return err
+				// }
 			}
 
 			if noNewBlockForSync {
