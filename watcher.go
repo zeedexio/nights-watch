@@ -243,17 +243,20 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 
 			if err != nil {
 				fmt.Printf("GetTransactionReceipt fail, err: %s", err)
-				sig.err = err
+				// sig.err = err
 
 				// one fails all
-				return
+				// return
+				
+				// new - continue
+				continue
+			} else {
+				sig.WaitPermission()
+
+				sig.rst = structs.NewRemovableTxAndReceipt(tx, txReceipt, false, block.Timestamp())
+	
+				sig.Done()
 			}
-
-			sig.WaitPermission()
-
-			sig.rst = structs.NewRemovableTxAndReceipt(tx, txReceipt, false, block.Timestamp())
-
-			sig.Done()
 		}()
 	}
 
