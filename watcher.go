@@ -171,10 +171,10 @@ func (watcher *AbstractWatcher) RunTillExitFromBlock(startBlockNum uint64) error
 				}
 
 				if err != nil {
-					// return err
+					return err
 					// ignore error
-					err = nil
-					continue
+					// err = nil
+					// continue
 				}
 			}
 
@@ -250,24 +250,27 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 
 				// one fails all
 				 return	
-			} else{
+			} 
 				sig.WaitPermission()
 
 				sig.rst = structs.NewRemovableTxAndReceipt(tx, txReceipt, false, block.Timestamp())
 	
 				sig.Done()
-			}
-			
 		}()
 	}
 
 	for i := 0; i < len(signals); i++ {
+		sig := signals[i]
+
 		if sig.err != nil {
 			//	 return sig.err
-			break
-			}
+			// continue
+			watcher.SyncedBlocks.PushBack(block.Block)
+			watcher.NewBlockChan <- block
 
-		sig := signals[i]
+			return nil
+			}
+	
 		sig.Permit()
 		sig.WaitDone()
 
