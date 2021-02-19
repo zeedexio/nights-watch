@@ -249,7 +249,7 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 				sig.err = err
 
 				// one fails all
-				 return	
+				// return	
 			} 
 				sig.WaitPermission()
 
@@ -265,11 +265,7 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 		if sig.err != nil {
 			//	 return sig.err
 			// continue
-			watcher.SyncedBlocks.PushBack(block.Block)
-			watcher.NewBlockChan <- block
-
-			return nil
-			}
+		}
 	
 		sig.Permit()
 		sig.WaitDone()
