@@ -243,20 +243,16 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 
 			if err != nil {
 				fmt.Printf("GetTransactionReceipt fail, err: %s", err)
-				// sig.err = err
+				sig.err = err
 
 				// one fails all
-				// return
-				
-				// new - continue
-				continue
-			} else {
+				return	
+			} 
 				sig.WaitPermission()
 
 				sig.rst = structs.NewRemovableTxAndReceipt(tx, txReceipt, false, block.Timestamp())
 	
 				sig.Done()
-			}
 		}()
 	}
 
@@ -265,9 +261,9 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 		sig.Permit()
 		sig.WaitDone()
 
-		if sig.err != nil {
-			return sig.err
-		}
+		// if sig.err != nil {
+		// 	 return sig.err
+		// }
 	}
 
 	for i := 0; i < len(signals); i++ {
