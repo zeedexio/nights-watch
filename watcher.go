@@ -171,10 +171,10 @@ func (watcher *AbstractWatcher) RunTillExitFromBlock(startBlockNum uint64) error
 				}
 
 				if err != nil {
-					return err
+					// return err
 					// ignore error
-					// err = nil
-					// continue
+					err = nil
+					continue
 				}
 			}
 
@@ -244,37 +244,34 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 		go func() {
 			txReceipt, err := watcher.rpc.GetTransactionReceipt(tx.GetHash())
 
-			sampleHash := "0xb5d132624a86adf21ca753d2763d1c6e8b0f469fc2433dd581c3c377b869de9f"
-
 			if err != nil {
 				fmt.Printf("GetTransactionReceipt fail, err: %s", err)
 				sig.err = err
 
 				// one fails all
-				// return	
+				return	
 				
-				txReceipt = watcher.rpc.GetTransactionReceipt(sampleHash)
 			} 
-				sig.WaitPermission()
+			
+			sig.WaitPermission()
 
-				sig.rst = structs.NewRemovableTxAndReceipt(tx, txReceipt, false, block.Timestamp())
-	
-				sig.Done()
+			sig.rst = structs.NewRemovableTxAndReceipt(tx, txReceipt, false, block.Timestamp())			
+
+			sig.Done()
+				
 		}()
 	}
 
 	for i := 0; i < len(signals); i++ {
 		sig := signals[i]
-
-		if sig.err != nil {
-			//	 return sig.err
-			// continue
-		}
-	
 		sig.Permit()
 		sig.WaitDone()
 
-		
+		if sig.err != nil {
+			watcher.SyncedBlocks.PushBack(block.Block)
+			watcher.NewBlockChan <- block
+			return sig.err
+		}
 	}
 
 	for i := 0; i < len(signals); i++ {
