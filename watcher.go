@@ -171,21 +171,15 @@ func (watcher *AbstractWatcher) RunTillExitFromBlock(startBlockNum uint64) error
 				}
 
 				if err != nil {
-					// return err
-					// ignore error
-					err = nil
-					newBlockNumToSync = watcher.LatestSyncedBlockNum() + 1
-					fmt.Println("next will be:", watcher.LatestSyncedBlockNum() + 1)
-					fmt.Println("got err")
-					// continue
+					return err
 				}
 			}
 
 			if noNewBlockForSync {
-				fmt.Println("no new block to sync, sleep for 3 secs")
+				fmt.Println("no new block to sync, sleep for 7 secs")
 
-				// sleep for 3 secs
-				timer := time.NewTimer(3 * time.Second)
+				// sleep for 7 secs
+				timer := time.NewTimer(7 * time.Second)
 				<-timer.C
 			}
 		}
@@ -201,7 +195,6 @@ func (watcher *AbstractWatcher) LatestSyncedBlockNum() uint64 {
 	}
 
 	b := watcher.SyncedBlocks.Back().Value.(sdk.Block)
-	fmt.Println("Next Block for Sync, b:", b.Number())
 
 	return b.Number()
 }
@@ -253,16 +246,14 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 				sig.err = err
 
 				// one fails all
-				return	
-				
-			} 
-			
+				return
+			}
+
 			sig.WaitPermission()
 
-			sig.rst = structs.NewRemovableTxAndReceipt(tx, txReceipt, false, block.Timestamp())			
+			sig.rst = structs.NewRemovableTxAndReceipt(tx, txReceipt, false, block.Timestamp())
 
 			sig.Done()
-				
 		}()
 	}
 
@@ -272,11 +263,7 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 		sig.WaitDone()
 
 		if sig.err != nil {
-
-			watcher.SyncedBlocks.PushBack(block.Block)
-			watcher.NewBlockChan <- block
-			fmt.Println("returning nil")
-			return nil
+			return sig.err
 		}
 	}
 
@@ -305,7 +292,6 @@ func (watcher *AbstractWatcher) addNewBlock(block *structs.RemovableBlock) error
 	// block
 	watcher.SyncedBlocks.PushBack(block.Block)
 	watcher.NewBlockChan <- block
-	fmt.Println("Block Done !")
 
 	return nil
 }
