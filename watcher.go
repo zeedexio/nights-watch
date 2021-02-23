@@ -176,10 +176,10 @@ func (watcher *AbstractWatcher) RunTillExitFromBlock(startBlockNum uint64) error
 			}
 
 			if noNewBlockForSync {
-				fmt.Println("no new block to sync, sleep for 7 secs")
+				fmt.Println("no new block to sync, sleep for 3 secs")
 
-				// sleep for 7 secs
-				timer := time.NewTimer(7 * time.Second)
+				// sleep for 3 secs
+				timer := time.NewTimer(3 * time.Second)
 				<-timer.C
 			}
 		}
